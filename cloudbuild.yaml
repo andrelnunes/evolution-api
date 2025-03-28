@@ -1,0 +1,35 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY}/evolution-api:${_TAG}',
+      '.'
+    ]
+
+  # Push the image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY}/evolution-api:${_TAG}'
+    ]
+
+  # Apply Kubernetes configurations
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+    - 'apply'
+    - '-f'
+    - 'k8s/${_ENV}/'
+    env:
+    - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}'
+
+substitutions:
+  _ENV: 'staging'  # or 'production'
+  _REGION: 'your-region'
+  _ARTIFACT_REGISTRY: 'evolution-registry'
+  _CLUSTER_NAME: 'evolution-cluster'
+  _TAG: 'latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY 

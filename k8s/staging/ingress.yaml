@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: evolution-api-ingress
+  namespace: evolution-staging
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "evolution-api-ip"
+    networking.gke.io/managed-certificates: "evolution-api-cert"
+spec:
+  rules:
+  - host: api-staging.yourdomain.com
+    http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: evolution-api
+            port:
+              number: 8080 

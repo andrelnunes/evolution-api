@@ -1,0 +1,16 @@
+apiVersion: monitoring.googleapis.com/v1
+kind: ClusterMonitoring
+metadata:
+  name: evolution-monitoring
+spec:
+  components:
+    prometheusOperator:
+      enabled: true
+    prometheus:
+      enabled: true
+    alertmanager:
+      enabled: true
+    nodeExporter:
+      enabled: true
+    kubeStateMetrics:
+      enabled: true 
